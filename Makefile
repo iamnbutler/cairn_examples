@@ -79,7 +79,7 @@ fuzz: cairn-tool
 # Binary size (Cairn's bench/size.md): each executable built for release with a link map,
 # stripped and attributed, and checked against SIZE_LIMIT bytes, into build/size/<App>/.
 # `cairn size` links every app in cairn.toml's `libs` into one archive, which can't hold six
-# apps (cairn#SIZE_ISSUE), so this runs Cairn's tools/size/size.ts per app, as `cairn size` does.
+# apps (cairn#173), so this runs Cairn's tools/size/size.ts per app, as `cairn size` does.
 size: lean
 	@mkdir -p build/size
 	@for a in $(APPS); do p=Cairn$${a%%:*}; \

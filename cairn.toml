@@ -12,4 +12,4 @@ swift = "."
 claims = "claims.lock"
 
 [dependencies]
-cairn = "^0.2.1"
+cairn = "^0.2.2"
