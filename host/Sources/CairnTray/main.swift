@@ -155,7 +155,14 @@ enum SelfTest {
             forward?(p)
         }
         engine.stats.reset()
-        usleep(2_000_000)
+        // 2 s, and at least the 100 ticks 2 s gives at 50 Hz: the caption check below needs it
+        // to have grown past two lines, which a slow timer takes longer to do.
+        let start = hostNow()
+        while hostNow() - start < 2 || published.take().ticks.count < 100 {
+            if hostNow() - start > 20 { break }
+            usleep(10_000)
+        }
+        let seconds = hostNow() - start
         engine.world.send = forwardSend
         // Lean has stepped every tick sent in the window; frames after it don't count.
         let end = engine.send([])
@@ -182,7 +189,9 @@ enum SelfTest {
         if !virtualized && rate < 30 { fail(String(format: "the overlay ticks at %.1f Hz (timer %.1f Hz)", rate, timerRate)) }
         // The caption has grown past two lines; the paragraph keeps the last two, with the tick.
         let lines: [String] = frame.surface(452)?.canvas.draws.compactMap { d -> String? in if case let .text(_, _, _, s) = d { s } else { nil } } ?? []
-        if lines.count != 2 || overlayTick(frame) == nil { fail("caption lines \(lines)") }
+        if lines.count != 2 || overlayTick(frame) == nil {
+            fail(String(format: "caption lines \(lines) after %.1f s at %.1f Hz", seconds, rate))
+        }
 
         // Hide it: the panel goes, and the subscription stops.
         choose("^454")
@@ -198,8 +207,8 @@ enum SelfTest {
         engine.stop()
         func q(_ p: Double) -> String { gaps.isEmpty ? "-" : String(format: "%.2f", gaps[min(gaps.count - 1, Int(Double(gaps.count) * p))]) }
         print("selftest: PASS (Tray: accessory, menu tree, open, add/pick, in-place update, stale choice ignored, overlay panel, quit)")
-        print(String(format: "  overlay ticks published: %.1f Hz over 2 s (every 20 ms asked); timer sent %.1f Hz, Lean kept %d of %d",
-                     rate, timerRate, advanced, sentTimes.count))
+        print(String(format: "  overlay ticks published: %.1f Hz over %.1f s (every 20 ms asked); timer sent %.1f Hz, Lean kept %d of %d",
+                     rate, seconds, timerRate, advanced, sentTimes.count))
         if virtualized {
             print("  50 Hz end to end: not checked, a virtual machine (kern.hv_vmm_present) doesn't hold the timer;"
                   + " real hardware only (bench/surfaces.md)")
