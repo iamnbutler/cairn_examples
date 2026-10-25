@@ -49,7 +49,7 @@ theorem tilesOf_layout (m : TextMetrics) (s : State) (ui : UI) :
     ∃ c aw, tilesOf (layout m ui.size (view s ui)) =
       arrange m c ⟨gridX, gridY, gridW ui.size, gridH ui.size⟩ (measure m aw (tilesNode s ui)) := by
   simp only [tilesOf, layout, view, galleryColumn, Layout.measure, measureList, rootRect, arrange,
-    arrangeList, childRects, lineRects, lineOf, Line.go, Laid.children, List.map_cons, List.map_nil,
+    arrangeList, childRects, placeRects, scrolled, lineRects, lineOf, Line.go, Laid.children, List.map_cons, List.map_nil,
     Sized.item, Sized.sizings, List.headD_cons, List.getD_cons_succ, List.getD_cons_zero, mainSize,
     header, Item.mainSizing, Item.crossSizing, Bool.false_eq_true, ↓reduceIte, mainBase,
     crossPlace, startOffset, spacing, mkRect, Rect.inset]

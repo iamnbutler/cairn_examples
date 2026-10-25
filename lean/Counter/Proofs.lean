@@ -135,7 +135,8 @@ theorem view_pressable (m : TextMetrics) (s : State) (ui : UI) (w : Size) (hw : 
     ∀ t ∈ targets (layout m w (view s ui)),
       hitTest (layout m w (view s ui)) t.visible.center = some t.control := by
   rw [view_eq]
-  exact hitTest_center_of_fitsIn rfl rfl (view_eq s ui ▸ view_fitsIn s ui (by omega) (by omega))
+  exact hitTest_center_of_fitsIn_flat rfl rfl (view_eq s ui ▸ view_fitsIn s ui (by omega) (by omega))
+    (by split <;> simp [Node.scrolls, Node.scrollsList, bar, countRow, button])
 -- endregion: counter-pressable
 
 end Examples.Counter

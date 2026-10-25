@@ -8,7 +8,7 @@ durable ids and machine-checked evidence.
 |---|---|---|---|
 | Counter | `lean/Counter.lean` | `CairnCounter` | ^1–^6 |
 | Basics | `lean/Basics.lean` | `CairnBasics` | ^101–^109 |
-| TodoMVC | `lean/Todo.lean`, `lean/Todo/` | `CairnTodo` | ^201–^225 |
+| TodoMVC | `lean/Todo.lean`, `lean/Todo/` | `CairnTodo` | ^201–^226 |
 | Clock | `lean/Clock.lean` | `CairnClock` | ^401–^409 |
 | Tray | `lean/Tray.lean` | `CairnTray` | ^450–^462 |
 | Gallery | `lean/Gallery.lean` | `CairnGallery` | ^501–^513 |
@@ -31,6 +31,7 @@ lean/               the Lake package: one lean_lib per app (<App>.lean, <App>/),
 host/Sources/       one SwiftPM executable per app (Cairn<App>), and CExamples (the apps'
                     Lean initializers)
 Package.swift       the hosts; Cairn's Swift products from the registry
+bundle/Info.plist   Tray's bundle settings, read by `cairn bundle` (Bundles, below)
 ```
 
 v1 apps all export `cairn_app_init/step/frame`, so each executable links exactly one app:
@@ -42,10 +43,20 @@ v1 apps all export `cairn_app_init/step/frame`, so each executable links exactly
 | Target | What it does |
 |---|---|
 | `make build` | `cairn build --app <App>` for each app: Lean, the app's archive, its host |
-| `make check` | everything a PR must pass: `lint`, `ledger`, `audit`, `doctest`, `kernel`, `selftest`, `fuzz-quick`, `size` |
+| `make check` | everything a PR must pass: `lint`, `ledger`, `moved`, `audit`, `doctest`, `kernel`, `selftest`, `fuzz-quick`, `size` |
 | `make selftest` | each app's `--selftest`, headless, through the host's real threads and accessibility mirror |
 | `make fuzz-quick` | `cairn fuzz` on all six apps, 200 sequences each, into build/fuzz/quick/ |
 | `make size` | `cairn size --app <App>`: each executable's release size, attributed, against 5,000,000 bytes, into build/size/<App>/ |
+| `make moved` | every id Cairn's claims.lock marks `moved:cairn_examples` is in claims.lock, active or retired |
 | `make ledger-update` | rewrite claims.lock after adding or retiring a claim |
 
 `swift run CairnTodo` opens an app.
+
+## Bundles
+
+`cairn bundle --app Tray` writes `build/apps/CairnTray.app`, a menu-bar-only app: `cairn bundle`
+takes `Info.plist` from the package's `bundle/` folder, and Tray's sets `LSUIElement`, so it has no
+Dock icon even before the host's code runs. Cairn 0.3.0 reads one `bundle/` per package, not one
+per app, so the other apps bundled from here get Tray's plist too (its identifier and
+`LSUIElement`). Their hosts open a window and switch to a regular app on the first frame, but only
+Tray is meant to be bundled.

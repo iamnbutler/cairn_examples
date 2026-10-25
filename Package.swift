@@ -26,7 +26,7 @@ let package = Package(
     name: "cairn_examples",
     platforms: [.macOS("27.0")],
     dependencies: [
-        .package(url: "https://cairn.registry.nexthub.sh/git/iamnbutler/cairn.git", from: "0.2.3"),
+        .package(url: "https://cairn.registry.nexthub.sh/git/iamnbutler/cairn.git", from: "0.3.0"),
     ],
     targets: [
         // The apps' initializers (host/Sources/CExamples/include/cairn_examples.h).

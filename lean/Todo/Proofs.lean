@@ -7,7 +7,7 @@ import Cairn.Claims.Deliver
 
 /-! # TodoMVC: presence and pressability
 
-The moves' own evidence (`post` for every enabled state), the invariants ^212 and ^225 and the
+The moves' own evidence (`post` for every enabled state), the invariants ^212 and ^226 and the
 flows ^216–^224 are checked where they are declared, in `Examples.Todo`. This file proves what
 depends on the view and layout:
 
@@ -264,7 +264,7 @@ theorem fitsIn_row {st : Style} {kids : List Node} {w h : Int} (hax : st.axis = 
   have hc : contentW st w = w := by simp [contentW, hp]
   have hc' : contentH st h = h := by simp [contentH, hp]
   refine .line (by rw [hax]; decide) (by rw [hp]; exact ⟨by decide, by decide, by decide, by decide⟩) (by omega) (by omega) (by simp) ?_ ?_ ?_
-  · simpa [hax, Axis.horiz, mainIn, hc] using hb
+  · intro _; simpa [hax, Axis.horiz, mainIn, hc] using hb
   · intro k hk'
     obtain ⟨h1, h2⟩ := hk k hk'
     simp [hax, Axis.horiz, crossSz, crossIn, hc', h1, h2, fixedOf, hh]; rfl
@@ -284,7 +284,7 @@ theorem fitsIn_col {st : Style} {kids : List Node} {w h : Int} (hax : st.axis = 
       (∀ n : Nat, (nodeSizings k).2 = .fixed n → len = n) → FitsIn k (contentW st w) len) :
     FitsIn (.box st none kids) w h := by
   refine .line (by rw [hax]; decide) hp hw hh (by simp) ?_ ?_ ?_
-  · simpa [hax, Axis.horiz, mainIn] using hb
+  · intro _; simpa [hax, Axis.horiz, mainIn] using hb
   · intro k hk'
     obtain ⟨h1, h2⟩ := hk k hk'
     simp [hax, Axis.horiz, crossSz, crossIn, h1, h2, fixedOf, hw]; rfl
@@ -487,6 +487,22 @@ theorem view_fitsIn (s : State) (ui : UI) {w h : Int} (hw : (minWidth : Int) ≤
 
 /-! ## Pressable -/
 
+/-- The view has no scroll box, so its controls show whole (`hitTest_center_of_fitsIn_flat`). -/
+theorem view_scrolls (s : State) (ui : UI) : (view s ui).scrolls = false := by
+  have hr : ∀ t, (todoRow s ui t).scrolls = false := by
+    intro t
+    simp only [todoRow]
+    split
+    · split <;> by_cases hh : hot ui t.id = true <;>
+        simp [hh, todoRow.viewRow, cell, spacer, Node.scrolls, Node.scrollsList]
+    · by_cases hh : hot ui t.id = true <;>
+        simp [hh, todoRow.viewRow, cell, Node.scrolls, Node.scrollsList]
+  have hl : Node.scrollsList ((visible s).map (todoRow s ui)) = false :=
+    Node.scrollsList_of_forall (by simp [hr])
+  by_cases h : s.todos = [] <;> by_cases hd : anyDone s = true <;>
+    simp [h, hd, view, heading, header, list, footer, info, filterBox, cell, spacer, Node.scrolls,
+      Node.scrollsList, hl]
+
 /-- **Every control is pressable at its centre**, in every state, with any text metrics, in
 any window at least `minWidth` wide and `height s` tall: hit testing there returns it. -/
 theorem view_pressable (s : State) (ui : UI) (m : TextMetrics) (w : Size)
@@ -495,7 +511,7 @@ theorem view_pressable (s : State) (ui : UI) (m : TextMetrics) (w : Size)
       hitTest (layout m w (view s ui)) t.visible.center = some t.control := by
   have hf := view_fitsIn s ui (w := max 0 w.w) (h := max 0 w.h) (by omega) (by omega)
   unfold view at hf ⊢
-  exact hitTest_center_of_fitsIn rfl rfl hf
+  exact hitTest_center_of_fitsIn_flat rfl rfl hf (view_scrolls s ui)
 
 /-- **Pressable, per move** (M1, docs/goals/m1.md): for every move of the machine enabled at key `k`, its
 control is on screen, and hit testing at the control's centre returns that control, in any
