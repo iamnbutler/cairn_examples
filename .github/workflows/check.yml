@@ -1,0 +1,54 @@
+# make check on macOS. The hosts target macOS 27 (Package.swift) and the self tests run the apps,
+# so the runner needs macOS 27 with an Xcode whose SDK has it. Set the repository variable
+# MACOS_RUNNER to such a runner's label; until then the job is skipped. Cairn comes from the
+# public registry, so no secrets are needed.
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    if: ${{ vars.MACOS_RUNNER != '' }}
+    runs-on: ${{ vars.MACOS_RUNNER }}
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The ledger compares claims.lock with the last release tag.
+          fetch-depth: 0
+
+      - name: Xcode and the Metal toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+          xcrun -f metal >/dev/null 2>&1 || xcodebuild -downloadComponent MetalToolchain
+
+      - name: elan and the Lean toolchain (lean/lean-toolchain)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean/lean-toolchain)"
+
+      - name: bun (cairn size)
+        run: command -v bun || (curl -fsSL https://bun.sh/install | bash && echo "$HOME/.bun/bin" >> "$GITHUB_PATH")
+
+      - run: make check
+
+      - name: Fuzz and size reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            build/fuzz/quick
+            build/size/*/
+          if-no-files-found: ignore
