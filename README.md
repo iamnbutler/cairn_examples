@@ -34,22 +34,18 @@ Package.swift       the hosts; Cairn's Swift products from the registry
 ```
 
 v1 apps all export `cairn_app_init/step/frame`, so each executable links exactly one app:
-`make lean` runs Cairn's `bin/cairn-link --lib <App>` once per app, into
-`.cairn/lib/libcairn_examples_<app>.a`.
+`make build` runs `cairn build --app <App>` once per app, which links it into
+`.cairn/lib/libcairn_examples_<app>.a` (Cairn's docs/cli.md, "Several apps").
 
 ## Make
 
 | Target | What it does |
 |---|---|
-| `make build` | `lake build`, the six archives, `swift build` |
+| `make build` | `cairn build --app <App>` for each app: Lean, the app's archive, its host |
 | `make check` | everything a PR must pass: `lint`, `ledger`, `audit`, `doctest`, `kernel`, `selftest`, `fuzz-quick`, `size` |
 | `make selftest` | each app's `--selftest`, headless, through the host's real threads and accessibility mirror |
-| `make fuzz-quick` | `cairn fuzz Counter Basics Todo`, 200 sequences each, into build/fuzz/quick/ |
-| `make size` | each executable's release size, attributed, against 5,000,000 bytes, into build/size/<App>/ |
+| `make fuzz-quick` | `cairn fuzz` on all six apps, 200 sequences each, into build/fuzz/quick/ |
+| `make size` | `cairn size --app <App>`: each executable's release size, attributed, against 5,000,000 bytes, into build/size/<App>/ |
 | `make ledger-update` | rewrite claims.lock after adding or retiring a claim |
 
 `swift run CairnTodo` opens an app.
-
-`cairn build`, `cairn size`, `cairn bench` and `cairn conformance` link every library in
-cairn.toml's `libs` into one archive, so they don't work on a package with six apps yet
-(cairn#173). `make size` runs Cairn's `tools/size/size.ts` per app instead.
