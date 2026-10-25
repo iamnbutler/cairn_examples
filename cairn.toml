@@ -2,7 +2,7 @@
 # reads this for the claims export, `cairn fuzz` and publishing.
 [package]
 name = "cairn_examples"
-version = "0.1.0"
+version = "0.1.1"
 kind = "bin"
 description = "Cairn's example apps: Counter, Basics, Todo, Clock, Tray and Gallery."
 license = "MIT"
@@ -12,4 +12,4 @@ swift = "."
 claims = "claims.lock"
 
 [dependencies]
-cairn = "^0.2.2"
+cairn = "^0.2.3"

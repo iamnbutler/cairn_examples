@@ -8,7 +8,7 @@ package cairn_examples where
     -- `weak.`: Lake passes it to every module, and only those that use the claim commands know it.
     ⟨`weak.cairn.claims.scope, "cairn_examples"⟩]
 
-require "iamnbutler" / "cairn" @ "^0.2.2"
+require "iamnbutler" / "cairn" @ "^0.2.3"
 
 /-- Every app with its proofs and tests (`CairnExamples.lean`): what the ledger, the axiom audit
 and the kernel replay read. Never linked. -/

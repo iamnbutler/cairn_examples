@@ -1,13 +1,13 @@
 {
-  "originHash" : "f028e5c520c2d142d653388b86745cb9798ce0cefa27b5c4360e43e3f5415389",
+  "originHash" : "658483b0ed52f14f94f35aeedce87c0869eac10cf83e5f7a458d55eae10a7b69",
   "pins" : [
     {
       "identity" : "cairn",
       "kind" : "remoteSourceControl",
       "location" : "https://cairn.registry.nexthub.sh/git/iamnbutler/cairn.git",
       "state" : {
-        "revision" : "885b58552016b6eb5a67d8fd5de5dda67b8eac51",
-        "version" : "0.2.2"
+        "revision" : "8ecf96ee6bf49d45c9b2b9734dc4fe225e4d33e5",
+        "version" : "0.2.3"
       }
     }
   ],
