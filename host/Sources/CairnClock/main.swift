@@ -1,4 +1,5 @@
 import AppKit
+import CExamples
 import CLean
 import CairnCapture
 import CairnFrame
@@ -6,13 +7,13 @@ import CairnHost
 import Metal
 import QuartzCore
 
-// Clock (lean/Examples/Clock.lean): a stopwatch on time, timers, file requests and a
+// Clock (lean/Clock.lean): a stopwatch on time, timers, file requests and a
 // subscription (docs/effects.md).
 //   CairnClock               open the window
 //   CairnClock --selftest    drive the host headlessly through its real threads and check it
 
 let clock = LeanApp(
-    module: runtime_initialize_cairn_Examples_Clock_Abi,
+    module: runtime_initialize_cairn__examples_Clock_Abi,
     initialize: { w, h, scale in cairn_app_init(w, h, scale) },
     step: { cairn_app_step($0, $1) },
     frame: { cairn_app_frame($0) },

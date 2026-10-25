@@ -1,0 +1,15 @@
+# Cairn's example apps, one package (README.md). `make check` builds and checks every app; `cairn`
+# reads this for the claims export, `cairn fuzz` and publishing.
+[package]
+name = "cairn_examples"
+version = "0.1.0"
+kind = "bin"
+description = "Cairn's example apps: Counter, Basics, Todo, Clock, Tray and Gallery."
+license = "MIT"
+lean = "lean"
+libs = ["Counter", "Basics", "Todo", "Clock", "Tray", "Gallery"]
+swift = "."
+claims = "claims.lock"
+
+[dependencies]
+cairn = "^0.2.1"

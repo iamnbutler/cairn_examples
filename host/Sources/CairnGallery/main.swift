@@ -1,4 +1,5 @@
 import AppKit
+import CExamples
 import CLean
 import CairnCapture
 import CairnFrame
@@ -7,7 +8,7 @@ import CairnRender
 import Metal
 import QuartzCore
 
-// Gallery (lean/Examples/Gallery.lean): image tiles loaded with `loadImage` (docs/effects.md,
+// Gallery (lean/Gallery.lean): image tiles loaded with `loadImage` (docs/effects.md,
 // "Images").
 //   CairnGallery               open the window
 //   CairnGallery --selftest    drive the host headlessly through its real threads and check it
@@ -27,7 +28,7 @@ import QuartzCore
 // host starts there.
 
 let gallery = LeanApp(
-    module: runtime_initialize_cairn_Examples_Gallery_Abi,
+    module: runtime_initialize_cairn__examples_Gallery_Abi,
     initialize: { w, h, scale in cairn_app_init(w, h, scale) },
     step: { cairn_app_step($0, $1) },
     frame: { cairn_app_frame($0) },

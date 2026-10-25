@@ -1,4 +1,4 @@
-import Examples
+import CairnExamples
 import Cairn.Fuzz.Collect
 import Cairn.Fuzz.Main
 

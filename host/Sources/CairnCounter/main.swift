@@ -1,4 +1,5 @@
 import AppKit
+import CExamples
 import CLean
 import CairnCapture
 import CairnFrame
@@ -6,13 +7,13 @@ import CairnHost
 import Metal
 import QuartzCore
 
-// Counter (lean/Examples/Counter.lean) on the v1 ABI.
+// Counter (lean/Counter.lean) on the v1 ABI.
 //   CairnCounter               open the window (add --stats for latency, --latency N to measure)
 //   CairnCounter --selftest    drive the host headlessly through its real threads and check it
 
 // region: counter-leanapp
 let counter = LeanApp(
-    module: runtime_initialize_cairn_Examples_Counter_Abi,
+    module: runtime_initialize_cairn__examples_Counter_Abi,
     initialize: { w, h, scale in cairn_app_init(w, h, scale) },
     step: { cairn_app_step($0, $1) },
     frame: { cairn_app_frame($0) },

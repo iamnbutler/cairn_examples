@@ -1,4 +1,5 @@
 import AppKit
+import CExamples
 import CLean
 import CairnCapture
 import CairnFrame
@@ -7,13 +8,13 @@ import CairnRender
 import Metal
 import QuartzCore
 
-// Basics (lean/Examples/Basics.lean): the first app on the v1 ABI.
+// Basics (lean/Basics.lean): the first app on the v1 ABI.
 //   CairnBasics               open the window (add --stats for latency, --latency N to measure)
 //   CairnBasics --selftest    drive the host headlessly through its real threads and check it
 //   CairnBasics --bench       input → frame and frame size with 10 and 1,000 items
 
 let basics = LeanApp(
-    module: runtime_initialize_cairn_Examples_Basics,
+    module: runtime_initialize_cairn__examples_Basics,
     initialize: { w, h, scale in cairn_app_init(w, h, scale) },
     step: { cairn_app_step($0, $1) },
     frame: { cairn_app_frame($0) },

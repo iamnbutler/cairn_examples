@@ -1,4 +1,5 @@
 import AppKit
+import CExamples
 import CLean
 import CairnCapture
 import CairnFrame
@@ -7,13 +8,13 @@ import CairnRender
 import Metal
 import QuartzCore
 
-// TodoMVC (lean/Examples/Todo.lean), workstream I.
+// TodoMVC (lean/Todo.lean), workstream I.
 //   CairnTodo               open the window (add --stats for latency, --latency N to measure)
 //   CairnTodo --selftest    drive the host headlessly through its real threads and check it
 //   CairnTodo --bench       update + view + layout + encode (and decode) at 100, 1,000, 10,000 nodes
 
 let todo = LeanApp(
-    module: runtime_initialize_cairn_Examples_Todo_Abi,
+    module: runtime_initialize_cairn__examples_Todo_Abi,
     initialize: { w, h, scale in cairn_app_init(w, h, scale) },
     step: { cairn_app_step($0, $1) },
     frame: { cairn_app_frame($0) },
@@ -38,7 +39,7 @@ func click(_ p: Point) -> [Event] {
     [.pointerMove(p), .pointerDown(p, .primary, clicks: 1, Mods()), .pointerUp(p, .primary, Mods())]
 }
 
-/// What AppKit sends for a double click: a second down with clickCount 2 (assumption ^214).
+/// What AppKit sends for a double click: a second down with clickCount 2 (assumption cairn^214).
 func doubleClick(_ p: Point) -> [Event] {
     click(p) + [.pointerDown(p, .primary, clicks: 2, Mods()), .pointerUp(p, .primary, Mods())]
 }

@@ -1,17 +1,18 @@
 import AppKit
+import CExamples
 import CLean
 import CairnFrame
 import CairnHost
 import Metal
 import QuartzCore
 
-// Tray (lean/Examples/Tray.lean): a menu bar item with a native menu and an overlay panel, and
+// Tray (lean/Tray.lean): a menu bar item with a native menu and an overlay panel, and
 // no window, so it runs as an accessory (docs/surfaces.md).
 //   CairnTray               put the item in the menu bar
 //   CairnTray --selftest    drive the menus and the panel headlessly and check them
 
 let tray = LeanApp(
-    module: runtime_initialize_cairn_Examples_Tray_Abi,
+    module: runtime_initialize_cairn__examples_Tray_Abi,
     initialize: { w, h, scale in cairn_app_init(w, h, scale) },
     step: { cairn_app_step($0, $1) },
     frame: { cairn_app_frame($0) },
