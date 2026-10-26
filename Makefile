@@ -18,7 +18,7 @@ APPS = Counter Basics Todo Clock Tray Gallery
 FUZZ_APPS = Counter Basics Todo Clock Tray Gallery
 SIZE_LIMIT = 5000000
 
-.PHONY: deps lean build check lint ledger ledger-update audit doctest kernel selftest fuzz-quick fuzz size cairn-tool clean
+.PHONY: deps lean build check lint ledger moved ledger-update audit doctest kernel selftest fuzz-quick fuzz size cairn-tool clean
 
 deps:
 	cd lean && lake env true
@@ -30,7 +30,7 @@ build: cairn-tool
 	@for a in $(APPS); do $(CAIRN) build --app $$a || exit 1; done
 
 # Everything a PR must pass.
-check: lint ledger audit doctest kernel selftest fuzz-quick size
+check: lint ledger moved audit doctest kernel selftest fuzz-quick size
 
 # Constructs that bypass the kernel or swap in unchecked code (Cairn's AGENTS.md, "Writing Lean").
 lint:
@@ -41,6 +41,14 @@ lint:
 # none is reused, and every claim in the code is locked (Cairn's docs/claims.md).
 ledger: lean
 	cd lean && lake exe ledger check --scope cairn_examples --root CairnExamples --lock ../claims.lock
+
+# Every id Cairn's claims.lock (the version Lake checked out) marks `moved:cairn_examples` is
+# issued here, active or retired: Cairn's site links each to this package's claim page.
+moved: deps
+	@awk -F'\t' 'NR==FNR { if ($$1 !~ /^#/) have[$$1] = $$3; next } \
+	  $$3 == "moved:cairn_examples" { n++; if (!($$1 in have)) { print "moved: ^" $$1 " is moved:cairn_examples in Cairn but not in claims.lock"; bad++ } } \
+	  END { printf "moved: %d ids moved:cairn_examples in Cairn, %d missing here\n", n, bad; exit bad > 0 }' \
+	  claims.lock $(CAIRN_PKG)/claims.lock
 
 ledger-update: lean
 	cd lean && lake exe ledger update --scope cairn_examples --root CairnExamples --lock ../claims.lock

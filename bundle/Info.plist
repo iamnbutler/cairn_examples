@@ -10,7 +10,8 @@
 	<string>APPL</string>
 	<key>CFBundleExecutable</key>
 	<string>CairnTray</string>
-	<!-- No window: an accessory app, with no Dock icon even before the host's code runs. -->
+	<!-- Tray's: `cairn bundle` reads the package's bundle/ for every app (README.md, "Bundles").
+	     No window: an accessory app, with no Dock icon even before the host's code runs. -->
 	<key>LSUIElement</key>
 	<true/>
 </dict>

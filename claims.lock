@@ -38,7 +38,8 @@
 222	flow	active	b0d8d8a6a65e2c5f	Clear completed
 223	flow	active	36d2b8e708c4eceb	Mark all as complete, then undo it
 224	flow	active	06954be5c9e714a8	A new todo under the Completed filter
-225	invariant	active	cdded3b5839c217c	The list is the filter applied to the todos
+225	invariant	retired	cdded3b5839c217c	The list is the filter applied to the todos
+226	invariant	active	5df0a26eadf00c3c	The list is the filter applied to the todos
 401	move	active	1b77afe95aa65f24	Start / Stop
 402	move	active	6750765048a4300d	Lap
 403	move	active	b3e0b25d90f70b6f	Reset
